@@ -1,0 +1,184 @@
+/* ==========================================
+   RESET E CONFIGURAÇÕES BÁSICAS
+   ========================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: var(--font-size-base);
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+/* ==========================================
+   HEADER E NAVEGAÇÃO
+   ========================================== */
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: var(--primary-color);
+    color: var(--white);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: var(--z-header);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+}
+
+header h1 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: var(--font-size-xl);
+}
+
+nav {
+    display: flex;
+    gap: var(--spacing-lg);
+}
+
+nav a {
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color var(--transition-normal);
+    position: relative;
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-lighter);
+    transition: width var(--transition-normal);
+}
+
+nav a:hover {
+    color: var(--primary-lighter);
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+/* Botão de Toggle de Tema */
+.theme-toggle {
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.theme-toggle:hover {
+    color: var(--primary-lighter);
+    transform: scale(1.1);
+}
+
+/* Menu Toggle (Mobile) */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    z-index: 1001;
+}
+
+.menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background: var(--white);
+    transition: all var(--transition-normal);
+    border-radius: 2px;
+}
+
+.menu-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* ==========================================
+   MAIN CONTENT
+   ========================================== */
+
+main {
+    max-width: 900px;
+    margin: 100px auto var(--spacing-lg);
+    padding: 0 var(--spacing-sm);
+}
+
+/* ... resto do código permanece igual ... *//* Media Queries para Mobile */
+@media (max-width: 768px) {
+    header {
+        flex-wrap: wrap;
+    }
+    
+    .menu-toggle {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.5rem;
+    }
+    
+    .menu-toggle span {
+        width: 25px;
+        height: 3px;
+        background: white;
+        transition: all 0.3s ease;
+    }
+    
+    nav {
+        width: 100%;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+    
+    nav.active {
+        max-height: 300px;
+    }
+    
+    nav a {
+        display: block;
+        margin: 1rem 0;
+    }
+    
+    #introducao {
+        flex-direction: column;
+        text-align: center;
+    }
+}
