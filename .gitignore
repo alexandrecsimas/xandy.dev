@@ -1,0 +1,39 @@
+# IDE specific files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.iml
+*.iws
+*.ipr
+
+# Build output
+/target/
+/build/
+/dist/
+/out/
+/bin/
+*.class
+
+# Dependencies
+/node_modules/
+/bower_components/
+/.gradle/
+/.mvn/
+
+# OS specific
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+
+# Local configuration
+.env
+.env.local
+application-local.properties
+application-local.yml
