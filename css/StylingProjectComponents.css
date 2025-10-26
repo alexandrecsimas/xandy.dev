@@ -1,0 +1,110 @@
+/* Loading spinner */
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    color: var(--text-color);
+}
+
+.loading-spinner i {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+/* Error message */
+.error-message {
+    padding: 2rem;
+    background: rgba(255, 0, 0, 0.1);
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.error-message button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Project grid */
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.project-card {
+    background: var(--card-background);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.project-card h3 {
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.project-tag {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.25rem 0.75rem;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+/* Homelab section */
+.homelab-section {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: var(--card-background);
+    border-radius: 8px;
+}
+
+.homelab-section h3 {
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+/* Availability notice */
+.availability-notice {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: var(--card-background);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.availability-notice h3 {
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.availability-notice ul {
+    list-style: none;
+    padding: 0;
+}
+
+.availability-notice li {
+    padding: 0.5rem 0;
+}
+
+.availability-notice li i {
+    color: var(--success-color, #28a745);
+    margin-right: 0.5rem;
+}
