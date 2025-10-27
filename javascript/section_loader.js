@@ -1,12 +1,32 @@
-
 /**
  * Section Loader - Carrega seções HTML dinamicamente
  */
 class SectionLoader {
     constructor() {
         this.cache = new Map();
-        this.loadingQueue = [];
         this.observers = new Map();
+        this.revealObserver = null;
+        this.initRevealObserver();
+    }
+
+    /**
+     * Inicializa o observer global para animações reveal
+     */
+    initRevealObserver() {
+        this.revealObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        console.log(`🎬 Animação ativada para: ${entry.target.tagName}`);
+                    }
+                });
+            },
+            {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            }
+        );
     }
 
     /**
@@ -18,20 +38,28 @@ class SectionLoader {
         try {
             // Verifica cache
             if (this.cache.has(sectionId)) {
+                console.log(`📦 Usando cache para: ${sectionId}`);
                 return this.cache.get(sectionId);
             }
 
+            console.log(`🌐 Fazendo fetch de: ${filePath}`);
             const response = await fetch(filePath);
             if (!response.ok) {
-                throw new Error(`Erro ao carregar ${filePath}: ${response.status}`);
+                throw new Error(`Erro ao carregar ${filePath}: ${response.status} ${response.statusText}`);
             }
 
             const html = await response.text();
+            console.log(`✅ Conteúdo carregado: ${sectionId} (${html.length} caracteres)`);
             this.cache.set(sectionId, html);
             return html;
         } catch (error) {
-            console.error(`Erro ao carregar seção ${sectionId}:`, error);
-            return `<div class="error-message">Erro ao carregar conteúdo. <button onclick="location.reload()">Recarregar</button></div>`;
+            console.error(`❌ Erro ao carregar seção ${sectionId}:`, error);
+            return `<div class="error-message">
+                <p>❌ Erro ao carregar conteúdo da seção "${sectionId}"</p>
+                <p>Arquivo: ${filePath}</p>
+                <p>Erro: ${error.message}</p>
+                <button onclick="location.reload()">🔄 Recarregar</button>
+            </div>`;
         }
     }
 
@@ -55,12 +83,19 @@ class SectionLoader {
     initializeSectionScripts(section) {
         // Re-aplica animações reveal manualmente
         const revealElements = section.querySelectorAll('.reveal');
+        
         revealElements.forEach(element => {
             const elementTop = element.getBoundingClientRect().top;
             const windowHeight = window.innerHeight;
 
-            if (elementTop < windowHeight * 0.8) {
+            // Ativa elementos que já estão visíveis na viewport
+            if (elementTop < windowHeight * 0.75) {
                 element.classList.add('active');
+                console.log(`✨ Elemento já visível ativado: ${element.tagName} na seção ${section.id}`);
+            } else {
+                // Observa elementos que ainda não estão visíveis
+                this.revealObserver.observe(element);
+                console.log(`👀 Observando elemento: ${element.tagName} na seção ${section.id}`);
             }
         });
 
@@ -87,12 +122,15 @@ class SectionLoader {
 
         // Carrega seções em paralelo
         const promises = sections.map(async ({ id, file }) => {
+            console.log(`🔄 Carregando seção: ${id} de ${file}`);
             const html = await this.loadSection(id, file);
             this.injectContent(id, html);
+            console.log(`✅ Seção ${id} carregada com sucesso`);
         });
 
         await Promise.all(promises);
         
+        console.log('🎉 Todas as seções foram carregadas!');
         // Dispara evento customizado após todas as seções carregarem
         document.dispatchEvent(new CustomEvent('sectionsLoaded'));
     }
@@ -108,13 +146,13 @@ class SectionLoader {
 
         const observer = new IntersectionObserver(
             async (entries) => {
-                entries.forEach(async (entry) => {
+                for (const entry of entries) {
                     if (entry.isIntersecting && !this.cache.has(sectionId)) {
                         const html = await this.loadSection(sectionId, filePath);
                         this.injectContent(sectionId, html);
                         observer.unobserve(entry.target);
                     }
-                });
+                }
             },
             { rootMargin: '100px' }
         );
@@ -122,16 +160,31 @@ class SectionLoader {
         observer.observe(target);
         this.observers.set(sectionId, observer);
     }
+
+    /**
+     * Cleanup - remove observers quando necessário
+     */
+    cleanup() {
+        if (this.revealObserver) {
+            this.revealObserver.disconnect();
+        }
+        this.observers.forEach(observer => observer.disconnect());
+        this.observers.clear();
+    }
 }
 
 // Inicializa o carregador
 const sectionLoader = new SectionLoader();
 
-// Carrega seções quando o DOM estiver pronto
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        sectionLoader.loadAllSections();
+// Garante que o DOM esteja pronto antes de carregar
+window.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 DOM Carregado - Iniciando carregamento das seções...');
+    sectionLoader.loadAllSections().catch(error => {
+        console.error('❌ Erro crítico no carregamento das seções:', error);
     });
-} else {
-    sectionLoader.loadAllSections();
-}
+});
+
+// Cleanup ao descarregar a página
+window.addEventListener('beforeunload', () => {
+    sectionLoader.cleanup();
+});
