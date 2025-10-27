@@ -1,7 +1,7 @@
 {
-  "name": "Portfólio - Seu Nome",
-  "short_name": "Portfólio",
-  "description": "Portfólio profissional de [Seu Nome]",
+  "name": "xandy.dev - Alexandre Carvalho",
+  "short_name": "xandy.dev",
+  "description": "Portfólio profissional de Alexandre Carvalho",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
